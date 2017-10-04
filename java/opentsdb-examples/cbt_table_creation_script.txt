@@ -1,0 +1,5 @@
+create 'tsdb-uid', 'id', 'name' // Ids for metrics tags and values
+create 'tsdb', 't'              // Time series data
+create 'tsdb-tree', 't'         // Metrics hierarchy
+create 'tsdb-meta', 'name'      // Metric metadata
+
