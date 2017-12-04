@@ -19,7 +19,7 @@
  */
 package com.example.cloud.bigtable.helloworld;
 
-import com.google.cloud.bigtable.hbase.BigtableConfiguration;
+import java.io.IOException;
 
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
@@ -34,7 +34,14 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 
-import java.io.IOException;
+import com.google.cloud.bigtable.hbase.BigtableConfiguration;
+import com.google.cloud.bigtable.hbase.util.HBaseTracingUtilities;
+
+import io.opencensus.contrib.zpages.ZPageHandlers;
+import io.opencensus.exporter.trace.stackdriver.StackdriverExporter;
+import io.opencensus.trace.Tracing;
+import io.opencensus.trace.config.TraceParams;
+import io.opencensus.trace.samplers.Samplers;
 
 /**
  * A minimal application that connects to Cloud Bigtable using the native HBase API
@@ -131,22 +138,32 @@ public class HelloWorld {
     } catch (IOException e) {
       System.err.println("Exception while running HelloWorld: " + e.getMessage());
       e.printStackTrace();
-      System.exit(1);
     }
-
-    System.exit(0);
   }
 
   private static void print(String msg) {
     System.out.println("HelloWorld: " + msg);
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException, InterruptedException {
     // Consult system properties to get project/instance
     String projectId = requiredProperty("bigtable.projectID");
     String instanceId = requiredProperty("bigtable.instanceID");
 
+    // Force tracing for every request for demo purposes.
+    Tracing.getTraceConfig().updateActiveTraceParams(
+      TraceParams.DEFAULT.toBuilder().setSampler(Samplers.probabilitySampler(1)).build());
+    // setup for zpages
+    HBaseTracingUtilities.setupTracingConfig();
+
+    // StackdriverStatsExporter.createAndRegisterWithProjectId(projectId, Duration.create(10, 0));
+    StackdriverExporter.createAndRegisterWithProjectId(projectId);
+
+    ZPageHandlers.startHttpServerAndRegisterAll(8080);
+
     doHelloWorld(projectId, instanceId);
+
+    Thread.sleep(60000);
   }
 
   private static String requiredProperty(String prop) {
