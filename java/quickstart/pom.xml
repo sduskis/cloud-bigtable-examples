@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright 2016 Google Inc. All Rights Reserved.
+Copyright 2018 Google LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,38 +16,43 @@ limitations under the License.
 -->
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <version>1.0.0</version>
 
-  <groupId>com.google.cloud</groupId>
-  <artifactId>bigtable-samples</artifactId>
-  <packaging>pom</packaging>
+  <groupId>cloud-bigtable</groupId>
+  <artifactId>quickstart</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
   <!--
     The parent pom defines common style checks and testing strategies for code samples.
     Removing or replacing it should not affect the execution of the samples in anyway.
   -->
-  <!-- sduskis: this breaks the build
   <parent>
     <groupId>com.google.cloud.samples</groupId>
     <artifactId>shared-configuration</artifactId>
     <version>1.0.10</version>
   </parent>
-  -->
 
-  <modules>
-    <module>dataflow-coinbase</module>
-    <module>dataflow-connector-examples</module>
-    <module>dataflow-load-books</module>
-    <module>dataproc-wordcount</module>
-    <module>gae-flexible-helloworld</module>
-    <module>hello-world</module>
-    <module>tracing-hello-world</module>
-    <module>metric-scaler</module>
-    <module>simple-cli</module>
-    <module>simple-performance-test</module>
-    <module>dataflow-bulk-delete</module>
-    <module>quickstart</module>
-    <module>connect</module>
-  </modules>
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <!-- START bigtable_dependencies -->
+    <dependency>
+      <groupId>com.google.cloud.bigtable</groupId>
+      <artifactId>bigtable-hbase-1.x</artifactId>
+      <version>1.4.0</version>
+    </dependency>
+    <!-- END bigtable_dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+
 </project>
-
