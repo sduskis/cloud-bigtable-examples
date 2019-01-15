@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.apache.beam.runners.dataflow.DataflowRunner;
 import org.apache.beam.runners.dataflow.options.DataflowPipelineOptions;
-import org.apache.beam.runners.direct.DirectRunner;
+import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.slf4j.Logger;
@@ -79,15 +79,15 @@ public class Util {
   };
 
   static DataflowPipelineOptions createOptions() {
-    DataflowPipelineOptions options = PipelineOptionsFactory.as(DataflowPipelineOptions.class);
-    options.setProject("[YOUR PROJECT ID]");
-    options.setZone("[THE ZONE OF YOUR CLUSTER]");
     String stagingLocation = "[YOUR BUCKET]";
-    options.setStagingLocation(stagingLocation + "/stage");
-    options.setTempLocation(stagingLocation + "/temp");
-    options.setRunner(DirectRunner.class);
-//    options.setRunner(DataflowRunner.class);
-    return options;
+    String args[] = new String[]{
+        "--project", "[Your project ID]",
+        "--region",  "[Your Dataflow region]",
+        "--stagingLocation", stagingLocation + "/stage",
+        "--tempLocation", stagingLocation + "/temp",
+        "--runner=direct"
+    };
+    return PipelineOptionsFactory.fromArgs(args).as(DataflowPipelineOptions.class);
   }
 
   static public String extractToFile(String resourceName) throws IOException {

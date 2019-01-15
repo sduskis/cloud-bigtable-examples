@@ -25,8 +25,10 @@
 	</parent>
 
 	<properties>
-		<bigtable.version>1.0.0-pre3</bigtable.version>
-		<opentsdb.version>2.4.0RC1</opentsdb.version>
+		<bigtable.version>1.8.0</bigtable.version>
+		<beam.version>2.9.0</beam.version>
+		<opentsdb.version>2.4.0</opentsdb.version>
+		<asyncbigtable.version>0.4.1</asyncbigtable.version>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
@@ -48,7 +50,7 @@
 		<dependency>
 			<groupId>com.google.cloud.bigtable</groupId>
 			<artifactId>bigtable-hbase-1.x-hadoop</artifactId>
-			<version>1.0.0-pre3</version>
+			<version>${bigtable.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.google.guava</groupId>
@@ -59,7 +61,7 @@
 		<dependency>
 			<groupId>org.apache.beam</groupId>
 			<artifactId>beam-runners-google-cloud-dataflow-java</artifactId>
-			<version>2.1.0</version>
+			<version>${beam.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.google.cloud.bigtable</groupId>
@@ -74,7 +76,7 @@
 		<dependency>
 			<groupId>org.apache.beam</groupId>
 			<artifactId>beam-runners-direct-java</artifactId>
-			<version>2.1.0</version>
+			<version>${beam.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -95,11 +97,11 @@
 		<dependency>
 			<groupId>com.pythian.opentsdb</groupId>
 			<artifactId>asyncbigtable</artifactId>
-			<version>0.3.0</version>
+			<version>${asyncbigtable.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.google.cloud.bigtable</groupId>
-					<artifactId>bigtable-hbase-1.2</artifactId>
+					<artifactId>*</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>com.google.guava</groupId>
