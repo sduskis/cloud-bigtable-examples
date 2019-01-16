@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.beam.runners.dataflow.DataflowRunner;
 import org.apache.beam.runners.dataflow.options.DataflowPipelineOptions;
@@ -41,14 +42,38 @@ public class Util {
       return "TimeSeriesPoint [metric=" + metric + ", time=" + time + ", value=" + value
           + ", attributes=" + attributes + "]";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj){
+        return true;
+      }
+
+      if (obj == null || !(obj instanceof  TimeSeriesPoint)) {
+        return false;
+      }
+
+      TimeSeriesPoint other = (TimeSeriesPoint) obj;
+
+      return Objects.equals(metric, other.metric)
+          && Objects.equals(time, other.time)
+          && Objects.equals(value, other.value)
+          && Objects.equals(attributes, other.attributes);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(metric, time, value, attributes);
+    }
   }
 
   transient static TSDB tsdb;
 
+
   protected static TSDB getTsdb() throws IOException {
     if (tsdb == null) {
-      String file = Util.extractToFile("/opentsdb.conf");
       LOG.info("Initializing tsdb");
+      String file = Util.extractToFile("/opentsdb.conf");
       tsdb = new TSDB(new Config(file));
     }
     return tsdb;
@@ -80,11 +105,13 @@ public class Util {
 
   static DataflowPipelineOptions createOptions() {
     String stagingLocation = "[YOUR BUCKET]";
+    String projectId = "[YOUR PROJECT]";
+    String region = "[YOUR REGION]";
     String args[] = new String[]{
-        "--project", "[Your project ID]",
-        "--region",  "[Your Dataflow region]",
-        "--stagingLocation", stagingLocation + "/stage",
-        "--tempLocation", stagingLocation + "/temp",
+        "--project=" + projectId,
+        "--region=" + region,
+        "--stagingLocation=" + stagingLocation + "/stage",
+        "--tempLocation=" + stagingLocation + "/temp",
         "--runner=direct"
     };
     return PipelineOptionsFactory.fromArgs(args).as(DataflowPipelineOptions.class);
